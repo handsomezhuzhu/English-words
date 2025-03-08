@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>英语生词记录</title>
     <style>
         :root {
@@ -69,13 +69,20 @@
         }
         
         select {
-            height: 38px;
+            height: 65px;
             width: 100%;
             margin: 0 auto;
             display: block;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            z-index: 9999;
+            position: relative;
+        }
+        @media (max-width: 600px) {
+            select {
+                height: 90px;
+            }
         }
 
         input[type="text"]:focus, select:focus {
@@ -120,12 +127,11 @@
             border-radius: 0.5rem;
             box-shadow: var(--shadow);
             display: flex;
+            flex-direction: row;
             align-items: center;
-            justify-content: space-between;
             gap: 0.75rem;
             transition: var(--transition);
-            height: 80px;
-            align-items: center;
+            min-height: 80px;
         }
 
         li:hover {
@@ -145,11 +151,33 @@
         @media (max-width: 600px) {
             .container {
                 padding: 1rem;
+                min-width: 100%;
             }
 
             li {
                 flex-direction: column;
+                align-items: stretch;
+                padding: 1rem;
+            }
+
+            li button {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+
+            .translation {
+                flex-direction: column;
                 align-items: flex-start;
+            }
+
+            input[type="text"], select {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            button {
+                width: 100%;
+                margin: 0.5rem 0;
             }
         }
     </style>
@@ -201,34 +229,58 @@
             @media (max-width: 600px) {
                 form[action="/add"] {
                     flex-direction: column;
-                    align-items: center;
+                    align-items: stretch;
                     padding: 0 1rem;
+                    min-height: 300px;
                 }
                 form[action="/add"] input,
                 form[action="/add"] select {
                     width: 100%;
-                    max-width: 300px;
                     margin: 0.5rem 0;
                 }
                 @media (max-width: 600px) {
-                    li {
-                        flex-direction: row;
-                        flex-wrap: wrap;
-                        gap: 0.5rem;
-                        align-items: center;
-                        justify-content: center;
+                    form[action="/add"] {
+                        flex-direction: column;
+                        align-items: stretch;
+                        padding: 0 1rem;
                     }
-                    li > * {
-                        white-space: nowrap;
+                    form[action="/add"] input,
+                    form[action="/add"] select {
+                        width: 100%;
+                        margin: 0.5rem 0;
+                    }
+                    form[action="/add_book"] {
+                        flex-direction: column;
+                        align-items: stretch;
+                        gap: 0.5rem;
+                        min-height: 200px;
+                    }
+                    form[action="/add_book"] input,
+                    form[action="/add_book"] select,
+                    form[action="/add_book"] button {
+                        width: 100%;
+                        margin: 0;
+                    }
+                    .container {
+                        padding: 1rem;
+                    }
+                    li {
+                        flex-direction: column;
+                        align-items: stretch;
+                        padding: 1rem;
+                    }
+                    li button {
+                        width: 100%;
+                        margin-top: 0.5rem;
                     }
                 }
             }
         </style>
         <ul>
             {% for entry in word_data %}
-            <li>{{ entry.word }}
+            <li><strong>{{ entry.word }}</strong>
                     {% for trans in entry.translations %}
-                        <div style="display: flex; align-items: center; gap: 0.5rem;">[{{ trans.pos }}] <button onclick="toggleTranslation(this)">显示翻译</button><span class="translation">{{ trans.translation }}</span></div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; flex: 1;">[{{ trans.pos }}] <button onclick="toggleTranslation(this)" style="width: 80px;">显示翻译</button><span class="translation">{{ trans.translation }}</span></div>
                     {% endfor %}
             <button onclick="deleteWord('{{ entry.word }}')" style="background-color: #f44336;">删除</button>
             </li>
@@ -276,7 +328,9 @@ function deleteBook() {
 </script>
 </html>
 
-<a href="/export_csv"><button style="position: absolute; top: 20px; right: 120px; background-color: var(--primary-color);">导出CSV</button></a>
-<a href="/export_db"><button style="position: absolute; top: 20px; right: 20px; background-color: var(--primary-color);">导出数据库</button></a>
+<div style="position: absolute; top: 0; right: 0; display: flex;">
+<a href="/export_db"><button style="background-color: var(--primary-color);">导出数据库</button></a>
+<a href="/export_csv"><button style="background-color: var(--primary-color);">导出CSV</button></a>
+</div>
 </script>
 </html>
