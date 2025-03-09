@@ -67,8 +67,12 @@ def export_csv():
         headers={"Content-disposition": "attachment; filename=vocabulary.csv"}
     )
 
+# 新增计数器
+word_submission_count = 0
+
 @app.route('/add', methods=['POST'])
 def add_word():
+    global word_submission_count
     word = request.form['word']
     pos = request.form['pos']
     translation = request.form['translation']
@@ -94,6 +98,15 @@ def add_word():
         new_trans = Translation(pos=pos, translation=translation, word_id=new_word.id)
         db.session.add(new_trans)
     db.session.commit()
+    
+    # 每次提交单词，计数器加1
+    word_submission_count += 1
+    
+    # 每5次单词提交备份一次数据库
+    if word_submission_count % 5 == 0:
+        backup_database()
+        word_submission_count = 0
+    
     return redirect(url_for('index', book=current_book))
 
 @app.route('/add_book', methods=['POST'])
@@ -143,6 +156,22 @@ def delete_word(word):
             db.session.commit()
             return '', 204
     return redirect(url_for('index', book=current_book))
+
+# 新增备份数据库函数
+def backup_database():
+    import shutil
+    from datetime import datetime
+    
+    # 获取当前时间戳
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    
+    # 备份文件名加上时间戳
+    backup_filename = f'instance/words_backup_{timestamp}.db'
+    
+    # 备份数据库
+    shutil.copyfile('instance/words.db', backup_filename)
+    
+    print(f'数据库备份成功，备份文件名为: {backup_filename}')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
