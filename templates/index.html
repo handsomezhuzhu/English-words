@@ -69,7 +69,7 @@
         }
         
         select {
-            height: 65px;
+            height: auto;
             width: 100%;
             margin: 0 auto;
             display: block;
@@ -80,7 +80,23 @@
             position: relative;
         }
         @media (max-width: 600px) {
-            select {
+            form[action="/add_book"] {
+                flex-wrap: wrap;
+                min-height: auto;
+            }
+            form[action="/add_book"] input {
+                width: calc(50% - 7.5px);
+            }
+            form[action="/add_book"] button {
+                width: calc(50% - 7.5px);
+            }
+            #bookToDelete {
+                width: calc(50% - 7.5px);
+            }
+            form[action="/add_book"] button:last-child {
+                width: calc(50% - 7.5px);
+            }
+                    select {
                 height: 90px;
             }
         }
@@ -149,27 +165,114 @@
         }
 
         @media (max-width: 600px) {
+            form[action="/add_book"] {
+                flex-wrap: wrap;
+                min-height: auto;
+            }
+            form[action="/add_book"] input {
+                width: calc(50% - 7.5px);
+            }
+            form[action="/add_book"] button {
+                width: calc(50% - 7.5px);
+            }
+            #bookToDelete {
+                width: calc(50% - 7.5px);
+            }
+            form[action="/add_book"] button:last-child {
+                width: calc(50% - 7.5px);
+            }
+                    /* 移动端样式 */
+            body {
+                font-size: 14px;
+            }
             .container {
                 padding: 1rem;
-                min-width: 100%;
             }
-
+            form {
+                padding: 1rem;
+            }
+            input[type="text"], select {
+                width: 100%;
+                margin: 0.5rem 0;
+            }
+            button {
+                width: 100%;
+                margin: 0.5rem 0;
+            }
             li {
                 flex-direction: column;
                 align-items: stretch;
                 padding: 1rem;
             }
-
             li button {
                 width: 100%;
                 margin-top: 0.5rem;
             }
-
             .translation {
                 flex-direction: column;
                 align-items: flex-start;
             }
-
+        }
+        @media (min-width: 601px) {
+            /* 电脑端样式 */
+            body {
+                font-size: 16px;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            form {
+                margin-bottom: 1.5rem;
+                background: white;
+                padding: 1.5rem;
+                border-radius: 0.5rem;
+                box-shadow: var(--shadow);
+            }
+            input[type="text"], select {
+                padding: 0.75rem;
+                border: 1px solid var(--border-color);
+                border-radius: 0.375rem;
+                transition: var(--transition);
+                width: 200px;
+                margin: 0 auto 0.75rem;
+                height: 38px;
+                display: block;
+            }
+            button {
+                padding: 0.75rem 1.5rem;
+                background-color: var(--primary-color);
+                color: white;
+                border: none;
+                border-radius: 0.375rem;
+                cursor: pointer;
+                transition: var(--transition);
+                font-weight: 500;
+                height: 38px;
+            }
+            li {
+                padding: 0.5rem;
+                margin-bottom: 0.5rem;
+                background: white;
+                border-radius: 0.5rem;
+                box-shadow: var(--shadow);
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.75rem;
+                transition: var(--transition);
+                min-height: 80px;
+            }
+            li button {
+                width: auto;
+                margin-top: 0;
+            }
+            .translation {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
             input[type="text"], select {
                 width: 100%;
                 box-sizing: border-box;
@@ -190,7 +293,7 @@
         
 
         <div style="margin: 20px 0; border-top: 1px solid #ddd; padding-top: 15px;">
-            <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 15px;">
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
                 {% for book in books %}
                 <a href="{{ url_for('index') }}?book={{ book }}" style="text-decoration: none; flex: 0 0 auto;">
                     <button style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; min-width: 100px;{% if book == current_book %} background-color: #2196F3;{% endif %}">
@@ -201,10 +304,10 @@
                 </a>
                 {% endfor %}
             </div>
-            <form action="/add_book" method="POST" style="display: flex; align-items: center; gap: 15px; height: 38px;">
+            <form action="/add_book" method="POST" style="display: flex; align-items: center; gap: 15px; height: 38px; flex-wrap: nowrap;">
                 <input type="text" name="book_name" placeholder="新单词本名称" required style="height: 38px; line-height: 38px;">
                 <button type="submit">新建</button>
-                <select id="bookToDelete" style="height: 38px; width: 150px;">
+                <select id="bookToDelete" style="height: 38px; width: 150px; flex-shrink: 0; line-height: 38px; padding: 0;" title="选择要删除的单词本">
                     {% for book in books if book != '默认单词本' %}
                     <option value="{{ book }}">{{ book }}</option>
                     {% endfor %}
@@ -216,7 +319,7 @@
         <form action="/add" method="POST" style="display: flex; flex-wrap: wrap; gap: 10px;">
             <input type="text" id="wordInput" name="word" placeholder="输入新单词" required style="flex: 1;">
             <input type="text" name="translation" placeholder="输入翻译" required style="flex: 1;">
-            <select name="pos" required style="height: 65px; flex: 1;">
+            <select name="pos" required style="height: 38px; line-height: 38px; padding: 0; flex: 1;" title="选择词性">
                 <option value="noun">名词</option>
                 <option value="verb">动词</option>
                 <option value="adj">形容词</option>
@@ -227,7 +330,23 @@
         </form>
         <style>
             @media (max-width: 600px) {
-                form[action="/add"] {
+            form[action="/add_book"] {
+                flex-wrap: wrap;
+                min-height: auto;
+            }
+            form[action="/add_book"] input {
+                width: calc(50% - 7.5px);
+            }
+            form[action="/add_book"] button {
+                width: calc(50% - 7.5px);
+            }
+            #bookToDelete {
+                width: calc(50% - 7.5px);
+            }
+            form[action="/add_book"] button:last-child {
+                width: calc(50% - 7.5px);
+            }
+                        form[action="/add"] {
                     flex-direction: column;
                     align-items: stretch;
                     padding: 0 1rem;
@@ -239,7 +358,23 @@
                     margin: 0.5rem 0;
                 }
                 @media (max-width: 600px) {
-                    form[action="/add"] {
+            form[action="/add_book"] {
+                flex-wrap: wrap;
+                min-height: auto;
+            }
+            form[action="/add_book"] input {
+                width: calc(50% - 7.5px);
+            }
+            form[action="/add_book"] button {
+                width: calc(50% - 7.5px);
+            }
+            #bookToDelete {
+                width: calc(50% - 7.5px);
+            }
+            form[action="/add_book"] button:last-child {
+                width: calc(50% - 7.5px);
+            }
+                            form[action="/add"] {
                         flex-direction: column;
                         align-items: stretch;
                         padding: 0 1rem;
@@ -306,12 +441,14 @@ function rememberWord(button, word) {
 }
 
 function deleteWord(word) {
-    fetch(`/delete_word/${word}`, { method: 'POST' })
-        .then(response => {
-            if (response.ok) {
-                window.location.reload();
-            }
-        });
+    if (confirm('确定要删除这个单词吗？')) {
+        fetch(`/delete_word/${word}`, { method: 'POST' })
+           .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                }
+            });
+    }
 }
 function deleteBook() {
     const bookName = document.getElementById('bookToDelete').value;
