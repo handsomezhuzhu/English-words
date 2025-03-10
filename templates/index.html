@@ -20,8 +20,14 @@
             margin: 0;
             padding: 0;
             background-color: var(--background-color);
-            color: var(--text-color);
+            color: white;
             line-height: 1.6;
+            background-image: url('/static/photo1.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
         }
 
         .container {
@@ -34,12 +40,14 @@
             color: var(--primary-color);
             margin-bottom: 1.5rem;
             font-weight: 600;
-            font-size: 2rem;
+            font-size: 2.5rem;
         }
 
         form {
             margin-bottom: 1.5rem;
-            background: white;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             padding: 1.5rem;
             border-radius: 0.5rem;
             box-shadow: var(--shadow);
@@ -81,22 +89,23 @@
         }
         @media (max-width: 600px) {
             form[action="/add_book"] {
-                flex-wrap: wrap;
-                min-height: auto;
+                flex-direction: column;
+                gap: 0.5rem;
             }
-            form[action="/add_book"] input {
-                width: calc(50% - 7.5px);
-            }
+            form[action="/add_book"] input,
+            form[action="/add_book"] select,
             form[action="/add_book"] button {
-                width: calc(50% - 7.5px);
+                width: 100% !important;
+                flex: none !important;
+                margin: 0;
             }
             #bookToDelete {
-                width: calc(50% - 7.5px);
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                padding-right: 1.5rem;
             }
-            form[action="/add_book"] button:last-child {
-                width: calc(50% - 7.5px);
-            }
-                    select {
+                        select {
                 height: 90px;
             }
         }
@@ -119,6 +128,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: 0 auto;
         }
 
         button:hover {
@@ -139,7 +149,9 @@
         li {
             padding: 0.5rem;
             margin-bottom: 0.5rem;
-            background: white;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             border-radius: 0.5rem;
             box-shadow: var(--shadow);
             display: flex;
@@ -148,6 +160,7 @@
             gap: 0.75rem;
             transition: var(--transition);
             min-height: 80px;
+            color: white;
         }
 
         li:hover {
@@ -155,19 +168,62 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         }
 
-        .translation {
+        .translation-line {
+                    display: none;
+                    margin-top: 0.5rem;
+                }
+                .translation-line.visible {
+                    display: block;
+                }
+
+        .translations {
             opacity: 0;
-            transition: opacity 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            width: 100%;
         }
 
-        .translation.show {
+        .translations.show {
             opacity: 1;
+            max-height: 500px;
+            margin: 15px 0;
         }
 
         @media (max-width: 600px) {
             form[action="/add_book"] {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                gap: 8px;
+                padding: 0 1rem;
+            }
+            form[action="/add_book"] input,
+            form[action="/add_book"] button {
+                height: 32px;
+                padding: 0.5rem 1rem;
+                width: 100%;
+                flex: 0 0 100%;
+                margin-bottom: 0.5rem;
+            }
+            form[action="/add_book"] {
                 flex-wrap: wrap;
-                min-height: auto;
+            }
+        }
+
+        button {
+            white-space: normal;
+            word-break: break-word;
+            min-width: 80px;
+        }
+            flex: 1 0 auto;
+                min-width: 160px;
+                width: auto;
+                margin: 0;
+            }
+            form[action="/add_book"] input,
+form[action="/add_book"] button {
+                width: calc(50% - 5px);
+                flex: 0 0 calc(50% - 5px);
             }
             form[action="/add_book"] input {
                 width: calc(50% - 7.5px);
@@ -218,6 +274,9 @@
             body {
                 font-size: 16px;
             }
+            form[action="/add_book"] input {
+                flex: 0 0 300px;
+            }
             .container {
                 max-width: 800px;
                 margin: 0 auto;
@@ -241,7 +300,26 @@
                 display: block;
             }
             button {
-                padding: 0.75rem 1.5rem;
+                .button-container {
+                    display: flex;
+                    gap: 1.5rem;
+                    justify-content: center;
+                    margin-top: 1rem;
+                }
+                
+                .button-container button {
+                    flex: 0 1 auto;
+                    padding: 0.75rem 1.5rem;
+                    border-radius: 999px;
+                    transition: all 0.2s ease;
+                }
+                
+                .button-container button:hover {
+                    background-color: rgba(59, 130, 246, 0.9);
+                    transform: translateY(-2px);
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                }
+                
                 background-color: var(--primary-color);
                 color: white;
                 border: none;
@@ -251,22 +329,26 @@
                 font-weight: 500;
                 height: 38px;
             }
-            li {
-                padding: 0.5rem;
-                margin-bottom: 0.5rem;
-                background: white;
-                border-radius: 0.5rem;
-                box-shadow: var(--shadow);
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                gap: 0.75rem;
-                transition: var(--transition);
-                min-height: 80px;
+            @media (max-width: 600px) {
+                input[type="text"], select {
+                    height: 38px;
+                }
+                form[action="/add_book"] {
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    gap: 5px;
+                }
+                form[action="/add_book"] input,
+                form[action="/add_book"] button {
+                    width: calc(50% - 2.5px);
+                    height: 38px;
+                    margin: 0;
+                }
             }
-            li button {
+            li {
                 width: auto;
                 margin-top: 0;
+                justify-content: space-between;
             }
             .translation {
                 flex-direction: row;
@@ -289,7 +371,7 @@
 <body>
     <div class="container">
         <h1>英语生词记录</h1>
-        <p style="margin-bottom: 20px;">作者：Simon，版本：0.1.6  代码全部由AI生成</p>
+        <p style="margin-bottom: 20px; color: white;">作者：Simon，版本：0.2.0  代码全部由AI生成</p>
         
 
         <div style="margin: 20px 0; border-top: 1px solid #ddd; padding-top: 15px;">
@@ -304,120 +386,275 @@
                 </a>
                 {% endfor %}
             </div>
-            <form action="/add_book" method="POST" style="display: flex; align-items: center; gap: 15px; height: 38px; flex-wrap: nowrap;">
-                <input type="text" name="book_name" placeholder="新单词本名称" required style="height: 38px; line-height: 38px;">
-                <button type="submit">新建</button>
-                <select id="bookToDelete" style="height: 38px; width: 150px; flex-shrink: 0; line-height: 38px; padding: 0;" title="选择要删除的单词本">
-                    {% for book in books if book != '默认单词本' %}
-                    <option value="{{ book }}">{{ book }}</option>
-                    {% endfor %}
-                </select>
-                <button type="button" onclick="deleteBook()" style="background-color: #ff5722;">删除选中</button>
-            </form>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <form action="/add_book" method="POST" style="display: flex; gap: 10px; flex-wrap: wrap; width: 100%;">
+                    <input type="text" name="book_name" placeholder="新单词本名称" required 
+                        style="height: 38px; padding: 0.75rem; flex: 1; border: 1px solid #ddd; border-radius: 0.375rem; line-height: 38px; margin-top: 10px;">
+                    <button type="submit" 
+                        style="height: 38px; padding: 0 1.5rem; background-color: #4CAF50; border: none; border-radius: 0.375rem; cursor: pointer; flex: 1;">
+                        新建单词本
+                    </button>
+                    <select id="bookToDelete" 
+                        style="height: 38px; padding: 0 0.75rem; border: 1px solid #ddd; border-radius: 0.375rem; flex: 1; line-height: 38px; overflow: hidden; text-overflow: ellipsis;"
+                        title="选择要删除的单词本">
+                        <option value="" selected disabled>请选择单词本</option>
+                        {% for book in books if book != '默认单词本' %}
+                        <option value="{{ book }}" style="max-width: 100%; overflow: hidden; text-overflow: ellipsis;">{{ book }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" onclick="deleteBook()" 
+                        style="height: 38px; padding: 0 1.5rem; background-color: #ff5722; border: none; border-radius: 0.375rem; cursor: pointer; flex: 1;">
+                        删除单词本
+                    </button>
+                </form>
+            </div>
+            
+           
         </div>
         
-        <form action="/add" method="POST" style="display: flex; flex-wrap: wrap; gap: 10px;">
-            <input type="text" id="wordInput" name="word" placeholder="输入新单词" required style="flex: 1;">
-            <input type="text" name="translation" placeholder="输入翻译" required style="flex: 1;">
-            <select name="pos" required style="height: 38px; line-height: 38px; padding: 0; flex: 1;" title="选择词性">
-                <option value="noun">名词</option>
-                <option value="verb">动词</option>
-                <option value="adj">形容词</option>
-                <option value="adv">副词</option>
-                <option value="phrase">短语</option>
-            </select>
-            <button type="submit">添加</button>
+        <form action="/add" method="POST" style="display: flex; flex-direction: column; gap: 15px; padding: 20px; background: rgba(255, 255, 255, 0.2); border-radius: 10px;">
+            <h3 style="margin: 0 0 10px 0; color: white; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.3); padding-bottom: 10px;">添加新单词</h3>
+            
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label for="wordInput" style="width: 80px; color: white; font-weight: 500;">单词：</label>
+                <input type="text" id="wordInput" name="word" placeholder="输入新单词" required style="flex: 1;">
+            </div>
+            
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label for="translationInput" style="width: 80px; color: white; font-weight: 500;">翻译：</label>
+                <div style="display: flex; flex: 1; gap: 10px;">
+                    <input type="text" id="translationInput" name="translation" placeholder="输入翻译" required style="flex: 1;">
+                    <button type="button" id="translateBtn" style="flex: 0 0 auto; background-color: #4CAF50; border-radius: 5px; width: 80px;" onclick="translateWord()">翻译</button>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label for="posSelect" style="width: 80px; color: white; font-weight: 500;">词性：</label>
+                <select id="posSelect" name="pos" required style="flex: 1; height: 38px; line-height: 38px; padding: 0 10px;" title="选择词性">
+                    <option value="" selected disabled>请选择词性</option>
+                    <option value="noun">名词</option>
+                    <option value="verb">动词</option>
+                    <option value="adj">形容词</option>
+                    <option value="adv">副词</option>
+                    <option value="phrase">短语</option>
+                </select>
+            </div>
+            
+            <button type="submit" style="margin-top: 10px; background-color: #2563eb; height: 45px; font-size: 16px; font-weight: 500;">添加单词</button>
         </form>
+        <div id="translationMessage" style="margin-top: 10px; padding: 8px; border-radius: 4px; display: none;"></div>
         <style>
             @media (max-width: 600px) {
             form[action="/add_book"] {
-                flex-wrap: wrap;
-                min-height: auto;
+                flex-direction: column;
+                gap: 0.3rem;
             }
-            form[action="/add_book"] input {
-                width: calc(50% - 7.5px);
-            }
+            form[action="/add_book"] input,
+            form[action="/add_book"] select,
             form[action="/add_book"] button {
-                width: calc(50% - 7.5px);
+                width: 100% !important;
+                flex: none !important;
+                margin: 0;
             }
             #bookToDelete {
-                width: calc(50% - 7.5px);
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                padding-right: 1.5rem;
             }
-            form[action="/add_book"] button:last-child {
-                width: calc(50% - 7.5px);
+            /* 优化移动端添加单词表单样式 */
+            form[action="/add"] {
+                flex-direction: column !important;
+                padding: 15px !important;
+                gap: 10px !important;
             }
-                        form[action="/add"] {
-                    flex-direction: column;
-                    align-items: stretch;
-                    padding: 0 1rem;
-                    min-height: 300px;
-                }
-                form[action="/add"] input,
-                form[action="/add"] select {
-                    width: 100%;
-                    margin: 0.5rem 0;
-                }
-                @media (max-width: 600px) {
+            form[action="/add"] h3 {
+                font-size: 18px !important;
+            }
+            form[action="/add"] div {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+            form[action="/add"] label {
+                width: 100% !important;
+                margin-bottom: 5px !important;
+            }
+            form[action="/add"] input,
+            form[action="/add"] select {
+                width: 100% !important;
+                margin: 0 !important;
+                height: 40px !important;
+            }
+            form[action="/add"] div:nth-child(3) div {
+                flex-direction: row !important;
+                width: 100% !important;
+            }
+            form[action="/add"] #translateBtn {
+                height: 40px !important;
+                padding: 0 10px !important;
+                width: 60px !important;
+                min-width: 60px !important;
+                flex: 0 0 60px !important;
+                align-self: flex-start !important;
+                margin-top: 0 !important;
+            }
+            form[action="/add"] select {
+                height: 40px !important;
+                padding: 0 10px !important;
+                min-height: 40px !important;
+            }
+            form[action="/add"] button[type="submit"] {
+                width: 100% !important;
+                margin-top: 15px !important;
+                height: 45px !important;
+            }
             form[action="/add_book"] {
-                flex-wrap: wrap;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.3rem;
                 min-height: auto;
+                padding: 0.5rem;
             }
-            form[action="/add_book"] input {
-                width: calc(50% - 7.5px);
-            }
+            form[action="/add_book"] input,
+            form[action="/add_book"] select,
             form[action="/add_book"] button {
-                width: calc(50% - 7.5px);
+                width: 100%;
+                margin: 0;
+                height: 36px;
             }
-            #bookToDelete {
-                width: calc(50% - 7.5px);
+            .container {
+                padding: 0.8rem;
             }
-            form[action="/add_book"] button:last-child {
-                width: calc(50% - 7.5px);
+            li {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem;
             }
-                            form[action="/add"] {
-                        flex-direction: column;
-                        align-items: stretch;
-                        padding: 0 1rem;
-                    }
-                    form[action="/add"] input,
-                    form[action="/add"] select {
-                        width: 100%;
-                        margin: 0.5rem 0;
-                    }
-                    form[action="/add_book"] {
-                        flex-direction: column;
-                        align-items: stretch;
-                        gap: 0.5rem;
-                        min-height: 200px;
-                    }
-                    form[action="/add_book"] input,
-                    form[action="/add_book"] select,
-                    form[action="/add_book"] button {
-                        width: 100%;
-                        margin: 0;
-                    }
-                    .container {
-                        padding: 1rem;
-                    }
-                    li {
-                        flex-direction: column;
-                        align-items: stretch;
-                        padding: 1rem;
-                    }
-                    li button {
-                        width: 100%;
-                        margin-top: 0.5rem;
-                    }
+            li button {
+                margin-left: auto;
+                margin-top: 0.5rem;
+            }
+            }
+            }
+        </style>
+        <style>
+            .word-card {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 12px;
+                border-radius: 10px;
+                margin-bottom: 15px;
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .word-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            }
+            .word-card .word {
+                font-size: 2.8em;
+                font-weight: 700;
+                text-align: center;
+                margin-bottom: 0.5rem;
+                color: #ffffff;
+                text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+                letter-spacing: 1px;
+                width: 100%;
+                padding: 5px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .word-card .translations {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+                width: 100%;
+                margin: 8px 0;
+            }
+            .translation-item {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                padding: 6px 10px;
+                border-radius: 6px;
+                width: 100%;
+                text-align: center;
+            }
+            .word-card .buttons {
+                display: flex;
+                gap: 0.8rem;
+                margin-top: 0.8rem;
+                width: 100%;
+                justify-content: center;
+            }
+            .translation-button {
+                width: 100px;
+                padding: 0.4rem;
+                margin: 0 0.3rem 0 0;
+                border-radius: 5px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                font-size: 0.9em;
+            }
+            .translation-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            @media (max-width: 768px) {
+                .word-card {
+                    flex-direction: column;
+                    padding: 10px;
                 }
+                .word-card .word {
+                    font-size: 2.2em;
+                }
+                .translation-item {
+                    flex-wrap: wrap;
+                    padding: 5px 8px;
+                }
+            }
+            .word-card .translation-text {
+                flex: 1;
+                font-size: 1em;
+                line-height: 1.4;
+                text-align: left;
+            }
+            .word-card .part-of-speech {
+                font-style: italic;
+                color: rgba(255, 255, 255, 0.8);
+                font-weight: 500;
+                min-width: 35px;
+                text-align: right;
+                margin-right: 5px;
+            }
+            .word-card .translation-button {
+                width: 90px;
+                text-align: center;
             }
         </style>
         <ul>
             {% for entry in word_data %}
-            <li><strong>{{ entry.word }}</strong>
+            <li class="word-card">
+                <div class="word">{{ entry.word }}</div>
+                <div class="translations">
                     {% for trans in entry.translations %}
-                        <div style="display: flex; align-items: center; gap: 0.5rem; flex: 1;">[{{ trans.pos }}] <button onclick="toggleTranslation(this)" style="width: 80px;">显示翻译</button><span class="translation">{{ trans.translation }}</span></div>
+                    <div class="translation-item">
+                        <div class="part-of-speech">[{{ trans.pos }}]</div>
+                        <div class="translation-text">{{ trans.translation }}</div>
+                    </div>
                     {% endfor %}
-            <button onclick="deleteWord('{{ entry.word }}')" style="background-color: #f44336;">删除</button>
+                </div>
+                <div class="buttons">
+                    <button onclick="toggleTranslation(this)" class="translation-button">显示翻译</button>
+                    <button onclick="deleteWord('{{ entry.word }}')" class="translation-button" style="background-color: #f44336;">删除</button>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -425,8 +662,10 @@
 </body>
 <script>
 function toggleTranslation(button) {
-    const translation = button.nextElementSibling;
-    translation.classList.toggle('show');
+    const wordCard = button.closest('.word-card');
+    const translations = wordCard.querySelector('.translations');
+    translations.classList.toggle('show');
+    button.textContent = translations.classList.contains('show') ? '隐藏翻译' : '显示翻译';
 }
 
 function rememberWord(button, word) {
@@ -452,6 +691,10 @@ function deleteWord(word) {
 }
 function deleteBook() {
     const bookName = document.getElementById('bookToDelete').value;
+    if(!bookName) {
+        alert('请先选择要删除的单词本');
+        return;
+    }
     if(confirm('确定要永久删除 ' + bookName + ' 单词本吗？')) {
         fetch('/delete_book', {
             method: 'POST',
@@ -462,12 +705,81 @@ function deleteBook() {
         }).then(() => window.location.reload());
     }
 }
+function exportDatabase() {
+    window.location.href = '/export_db';
+}
+
+function translateWord() {
+    const wordInput = document.getElementById('wordInput');
+    const translationInput = document.getElementById('translationInput');
+    const messageDiv = document.getElementById('translationMessage');
+    
+    // 检查是否输入了单词
+    if (!wordInput.value.trim()) {
+        showMessage('请先输入要翻译的单词', 'error');
+        return;
+    }
+    
+    // 显示加载状态
+    showMessage('正在翻译...', 'info');
+    
+    // 创建表单数据
+    const formData = new FormData();
+    formData.append('word', wordInput.value.trim());
+    
+    // 发送翻译请求
+    fetch('/translate', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 翻译成功，填充翻译结果
+            translationInput.value = data.translation;
+            showMessage('翻译成功！', 'success');
+        } else {
+            // 翻译失败，显示错误信息
+            showMessage(`翻译失败: ${data.error}。建议手动查询。`, 'error');
+        }
+    })
+    .catch(error => {
+        showMessage('网络错误，请稍后再试或手动查询。', 'error');
+        console.error('翻译请求错误:', error);
+    });
+}
+
+function showMessage(message, type) {
+    const messageDiv = document.getElementById('translationMessage');
+    messageDiv.textContent = message;
+    messageDiv.style.display = 'block';
+    
+    // 根据消息类型设置不同的样式
+    if (type === 'error') {
+        messageDiv.style.backgroundColor = '#ffebee';
+        messageDiv.style.color = '#c62828';
+        messageDiv.style.border = '1px solid #ef9a9a';
+    } else if (type === 'success') {
+        messageDiv.style.backgroundColor = '#e8f5e9';
+        messageDiv.style.color = '#2e7d32';
+        messageDiv.style.border = '1px solid #a5d6a7';
+    } else if (type === 'info') {
+        messageDiv.style.backgroundColor = '#e3f2fd';
+        messageDiv.style.color = '#1565c0';
+        messageDiv.style.border = '1px solid #90caf9';
+    }
+    
+    // 3秒后自动隐藏消息
+    setTimeout(() => {
+        messageDiv.style.display = 'none';
+    }, 3000);
+}
 </script>
 </html>
 
-<div style="position: absolute; top: 0; right: 0; display: flex;">
-<a href="/export_db"><button style="background-color: var(--primary-color);">导出数据库</button></a>
-<a href="/export_csv"><button style="background-color: var(--primary-color);">导出CSV</button></a>
+<div style="display: flex; gap: 15px; margin-top: 2rem; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 0.5rem;">
+    <button onclick="exportDatabase()" style="background-color: #4CAF50;">导出数据库</button>
+    <button onclick="window.location.href='/export_excel'" style="background-color: #009688;">导出表格</button>
 </div>
 </script>
 </html>

@@ -7,8 +7,9 @@
 - 创建和管理多个单词本
 - 添加、编辑和删除单词
 - 为单词添加多个翻译和词性
-- 导出单词本为CSV文件
-- 备份和恢复数据库
+- 使用百度翻译API自动翻译单词
+- 导出单词本为Excel文件
+- 自动备份和恢复数据库
 
 ## 快速开始
 
@@ -21,15 +22,32 @@
 ```bash
 pip install -r requirements.txt
 ```
-3. 初始化数据库：
-```bash
-python init_db.py
-```
+3. 配置百度翻译API（详见下方「配置百度翻译API」部分）
 4. 启动服务：
 ```bash
 python app.py
 ```
 5. 访问 http://localhost:5000 使用系统
+
+## 配置百度翻译API
+
+本系统使用百度翻译API进行单词翻译，使用前需要获取API密钥并进行配置：
+
+### 获取百度翻译API密钥
+1. 访问[百度翻译开放平台](https://fanyi-api.baidu.com/)并注册/登录账号
+2. 在管理控制台中选择「开通服务」→「通用翻译API」
+3. 填写应用名称和应用描述，选择「通用翻译（适用于文本翻译）」
+4. 提交申请并等待审核通过
+5. 审核通过后，在「总览」页面可以看到您的APPID和密钥
+
+### 配置系统
+1. 打开项目目录中的`config.py`文件
+2. 将获取到的APPID和密钥填入对应位置：
+```python
+BAIDU_APPID = 'YOUR_APPID_HERE'  # 替换为您的APPID
+BAIDU_APPKEY = 'YOUR_APPKEY_HERE'  # 替换为您的APPKEY
+```
+3. 保存文件
 
 ## 注意事项
 

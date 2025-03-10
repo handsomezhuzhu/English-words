@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, Response
+from flask import Flask, render_template, request, redirect, url_for, Response, jsonify
 from datetime import datetime, timedelta
-import csv
-from io import StringIO
+from openpyxl import Workbook
+from io import BytesIO
 from models import db, WordBook, Word, Translation
+from translation_service import translate_text
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///words.db'
@@ -48,24 +49,30 @@ def export_db():
         headers={'Content-disposition': 'attachment; filename=words.db'}
     )
 
-@app.route('/export_csv')
-def export_csv():
-    output = StringIO()
-    writer = csv.writer(output)
-    writer.writerow(['单词', '词性', '翻译'])
+@app.route('/export_excel')
+def export_excel():
+    wb = Workbook()
+    ws = wb.active
+    ws.append(['单词', '词性', '翻译'])
     
     book = WordBook.query.filter_by(name=current_book).first()
     if book:
         for word in Word.query.filter_by(book_id=book.id).all():
             for trans in word.translations:
-                writer.writerow([word.word, trans.pos, trans.translation])
+                ws.append([word.word, trans.pos, trans.translation])
     
-    output.seek(0)
-    return Response(
-        output,
-        mimetype="text/csv",
-        headers={"Content-disposition": "attachment; filename=vocabulary.csv"}
-    )
+    try:
+        output = BytesIO()
+        wb.save(output)
+        output.seek(0)
+        return Response(
+            output,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            headers={'Content-disposition': 'attachment; filename=vocabulary.xlsx'}
+        )
+    except Exception as e:
+        print(f'导出表格文件时出现错误: {e}')
+        return Response('导出表格文件时出现错误', status=500)
 
 # 新增计数器
 word_submission_count = 0
@@ -132,7 +139,7 @@ def delete_book():
     for word in Word.query.filter_by(book_id=book.id).all():
         Translation.query.filter_by(word_id=word.id).delete()
         db.session.delete(word)
-    # 再删除单词本
+    # 如果删除的是当前单词本或只剩两个单词本，切换到默认单词本
     if book_name == current_book or WordBook.query.count() == 2:
         current_book = '默认单词本'
     # 先删除该单词本下的所有单词
@@ -157,21 +164,36 @@ def delete_word(word):
             return '', 204
     return redirect(url_for('index', book=current_book))
 
-# 新增备份数据库函数
+# 数据库自动备份函数
 def backup_database():
+    """自动备份数据库文件
+    
+    每当用户提交5次单词后，系统会自动调用此函数进行数据库备份
+    备份文件会以时间戳命名，存储在instance目录下
+    """
     import shutil
     from datetime import datetime
     
-    # 获取当前时间戳
+    # 获取当前时间戳作为文件名的一部分
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     
-    # 备份文件名加上时间戳
+    # 备份文件名格式：words_backup_年月日时分秒.db
     backup_filename = f'instance/words_backup_{timestamp}.db'
     
-    # 备份数据库
+    # 使用shutil.copyfile复制数据库文件
     shutil.copyfile('instance/words.db', backup_filename)
     
     print(f'数据库备份成功，备份文件名为: {backup_filename}')
+    # 备份文件存储在instance目录下，可以在需要时用于恢复数据
+
+@app.route('/translate', methods=['POST'])
+def translate():
+    word = request.form.get('word')
+    if not word:
+        return jsonify({'success': False, 'error': '未提供单词'})
+    
+    result = translate_text(word)
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

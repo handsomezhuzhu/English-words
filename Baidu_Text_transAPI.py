@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# This code shows an example of text translation from English to Simplified-Chinese.
-# This code runs on Python 2.7.x and Python 3.x.
-# You may install `requests` to run this code: pip install requests
-# Please refer to `https://api.fanyi.baidu.com/doc/21` for complete api document
+# 百度翻译API示例代码
+# 本代码展示了如何使用百度翻译API将英文翻译为简体中文
+# 支持Python 2.7.x和Python 3.x
+# 运行前请确保已安装requests库: pip install requests
+# 完整API文档请参考: https://api.fanyi.baidu.com/doc/21
 
 import requests
 import random
